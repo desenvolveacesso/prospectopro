@@ -1,0 +1,1800 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prospecto Pro | Gestão de Prospecção e Análise</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        /* Nova Paleta de Cores Empresarial */
+        :root {
+            --primary: #2196F3; /* Azul mais corporativo */
+            --primary-dark: #1976D2;
+            --secondary: #4CAF50; /* Verde para sucesso/positivo */
+            --secondary-dark: #388E3C;
+            --accent: #FFC107; /* Amarelo/âmbar para avisos/destaque */
+            --danger: #F44336; /* Vermelho para perigo/exclusão */
+            --warning: #FF9800; /* Laranja para atenção */
+            --info: #03A9F4; /* Azul claro para informações */
+            --text-dark: #333333; /* Texto principal mais escuro */
+            --text-light: #666666; /* Texto secundário */
+            --background-light: #F8F9FA; /* Fundo mais claro */
+            --background-card: #FFFFFF; /* Fundo dos cards */
+            --border-color: #E0E0E0; /* Cor da borda padrão */
+            --shadow-color: rgba(0, 0, 0, 0.08); /* Sombra mais sutil */
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Garante que o footer fique no final da página */
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            padding: 20px 0;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .corretor-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .corretor-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+        
+        .corretor-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .corretor-name {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .corretor-creci {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo i {
+            font-size: 28px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap; /* Permite que os botões quebrem a linha em telas menores */
+            justify-content: flex-end;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none; /* Para links */
+            color: inherit; /* Garante que a cor do texto do link seja herdada */
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid white;
+            color: white;
+        }
+        
+        .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: white;
+        }
+        .btn-success:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #D32F2F;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        .btn-warning:hover {
+            background-color: #F57C00;
+            transform: translateY(-2px);
+        }
+
+        .btn-info {
+            background-color: var(--info);
+            color: white;
+        }
+        .btn-info:hover {
+            background-color: #0288D1;
+            transform: translateY(-2px);
+        }
+
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+        }
+        .btn-whatsapp:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background-color: var(--background-card);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px var(--shadow-color);
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 1px solid var(--border-color); /* Borda sutil */
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            color: var(--text-dark);
+            background-color: var(--background-light);
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-col {
+            flex: 1;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .alert-warning {
+            background-color: rgba(255, 152, 0, 0.1);
+            border-left: 4px solid var(--warning);
+            color: var(--warning);
+        }
+        
+        .alert-success {
+            background-color: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .alert-info {
+            background-color: rgba(3, 169, 244, 0.1);
+            border-left: 4px solid var(--info);
+            color: var(--info);
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--text-light);
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+        .close-btn:hover {
+            opacity: 1;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th, td {
+            padding: 14px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+        
+        th {
+            background-color: var(--background-light);
+            font-weight: 600;
+            color: var(--text-dark);
+            position: sticky;
+            top: 0;
+            z-index: 1; /* Para que o cabeçalho fique sobre o conteúdo ao rolar */
+        }
+        
+        tr:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+        
+        .badge-primary {
+            background-color: rgba(33, 150, 243, 0.15);
+            color: var(--primary);
+        }
+        
+        .badge-success {
+            background-color: rgba(76, 175, 80, 0.15);
+            color: var(--secondary);
+        }
+        
+        .badge-danger {
+            background-color: rgba(244, 67, 54, 0.15);
+            color: var(--danger);
+        }
+        
+        .badge-warning {
+            background-color: rgba(255, 152, 0, 0.15);
+            color: var(--warning);
+        }
+        
+        .badge-info {
+            background-color: rgba(3, 169, 244, 0.15);
+            color: var(--info);
+        }
+        
+        .badge-purple { /* Mantido para 'restrição' */
+            background-color: rgba(156, 39, 176, 0.15); 
+            color: #9C27B0;
+        }
+        
+        .badge-teal { /* Mantido para 'recuperado' */
+            background-color: rgba(0, 150, 136, 0.15);
+            color: #009688;
+        }
+        
+        .action-btn {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-right: 5px;
+            font-size: 14px;
+            background-color: transparent;
+            color: var(--text-light);
+        }
+        
+        .action-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: translateY(-1px);
+        }
+
+        .action-btn i {
+            font-size: 15px;
+        }
+        
+        .today-contact {
+            background-color: rgba(255, 152, 0, 0.05);
+            border-left: 3px solid var(--warning);
+        }
+        
+        .money {
+            font-family: 'Roboto Mono', 'Courier New', monospace;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .file-input {
+            display: none;
+        }
+        
+        .status-filter {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .status-filter-btn {
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            border: 1px solid var(--border-color);
+            background-color: var(--background-card);
+            color: var(--text-light);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .status-filter-btn.active {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 5px rgba(33, 150, 243, 0.2);
+        }
+        
+        .status-filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para a seção de gráficos */
+        .analytics-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px; /* Altura padrão para o gráfico */
+            width: 100%;
+        }
+
+        /* Estilos para a seção de relatórios */
+        .reports-section .report-options {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Estilos para o rodapé */
+        footer {
+            margin-top: auto; /* Empurra o rodapé para baixo */
+            background-color: var(--primary-dark);
+            color: white;
+            text-align: center;
+            padding: 15px 20px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 -4px 12px var(--shadow-color);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+        }
+
+        .modal-content {
+            background-color: var(--background-card);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 700px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            color: white;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-close:hover {
+            opacity: 0.8;
+        }
+
+        .modal-body {
+            padding: 20px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        /* Configurações do Corretor */
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .logo-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--border-color);
+            margin-top: 10px;
+        }
+
+        /* Estilos para impressão */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .printable-content, .printable-content * {
+                visibility: visible;
+            }
+            .printable-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                font-family: 'Segoe UI', Arial, sans-serif;
+                color: #000;
+            }
+            .printable-content h1, .printable-content h2 {
+                text-align: center;
+                margin-bottom: 20px;
+                color: #333;
+            }
+            .printable-content table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+            .printable-content th, .printable-content td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+                font-size: 12px;
+            }
+            .printable-content th {
+                background-color: #f2f2f2;
+                font-weight: bold;
+            }
+            .printable-content .badge {
+                /* Manter o estilo do badge se for relevante na impressão */
+                -webkit-print-color-adjust: exact; /* Força cores de fundo na impressão */
+                color-adjust: exact;
+                background-color: #eee; /* Cor de fundo padrão para badges na impressão */
+                padding: 3px 6px;
+                border-radius: 10px;
+                font-size: 10px;
+                display: inline-block;
+            }
+            /* Cores específicas para badges na impressão */
+            .printable-content .badge-warning { background-color: #ffda6e !important; }
+            .printable-content .badge-success { background-color: #a8e6cf !important; }
+            .printable-content .badge-danger { background-color: #ff9999 !important; }
+            .printable-content .badge-primary { background-color: #92d1ff !important; }
+            .printable-content .badge-purple { background-color: #e0b0ff !important; }
+            .printable-content .badge-info { background-color: #89e4ff !important; }
+            .printable-content .badge-teal { background-color: #8eebe0 !important; }
+
+            .printable-content .money {
+                font-family: 'Courier New', monospace;
+            }
+
+            footer {
+                display: none; /* Não exibe o rodapé na impressão */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .analytics-section {
+                grid-template-columns: 1fr; /* Uma coluna em telas menores */
+            }
+
+            .corretor-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="corretor-info">
+                <img id="corretorLogo" src="" class="corretor-logo" alt="Logo do Corretor">
+                <div class="corretor-details">
+                    <div id="corretorName" class="corretor-name">Nome do Corretor</div>
+                    <div id="corretorCreci" class="corretor-creci">CRECI: 000000</div>
+                </div>
+            </div>
+            <div class="actions">
+                <a href="https://dinheiroeplanejamento.blogspot.com/" target="_blank" class="btn btn-outline" title="Visitar Blog">
+                    <i class="fas fa-blog"></i> Blog
+                </a>
+                <button id="settingsBtn" class="btn btn-outline">
+                    <i class="fas fa-cog"></i> Configurações
+                </button>
+                <button id="templateBtn" class="btn btn-outline">
+                    <i class="fas fa-download"></i> Baixar Modelo JSON
+                </button>
+                <button id="excelTemplateBtn" class="btn btn-outline">
+                    <i class="fas fa-file-excel"></i> Baixar Modelo Excel
+                </button>
+                <button id="exportBtn" class="btn btn-outline">
+                    <i class="fas fa-file-export"></i> Exportar Dados
+                </button>
+                <button id="importBtn" class="btn btn-outline">
+                    <i class="fas fa-file-import"></i> Importar Dados
+                </button>
+                <input type="file" id="fileInput" class="file-input" accept=".json,.xlsx,.xls">
+                <button id="newClientBtn" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Novo Cliente
+                </button>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div id="contactAlert" class="alert alert-warning hidden">
+            <span id="alertMessage"></span>
+            <button class="close-btn">&times;</button>
+        </div>
+        
+        <div id="successAlert" class="alert alert-success hidden">
+            <span id="successMessage"></span>
+            <button class="close-btn">&times;</button>
+        </div>
+
+        <div id="infoAlert" class="alert alert-info hidden">
+            <span id="infoMessage"></span>
+            <button class="close-btn">&times;</button>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Análise de Prospecção</h2>
+            </div>
+            <div class="analytics-section">
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="recuperadosAprovadosChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="card reports-section">
+            <div class="card-header">
+                <h2 class="card-title">Relatórios</h2>
+            </div>
+            <div class="report-options">
+                <button id="reportAllClientsBtn" class="btn btn-info">
+                    <i class="fas fa-print"></i> Imprimir Todos os Clientes
+                </button>
+                <select id="reportStatusSelect" class="form-control" style="width: auto;">
+                    <option value="">Selecionar Status para Relatório</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="comprou">Comprou</option>
+                    <option value="desistiu">Desistiu</option>
+                    <option value="procurando">Procurando mais barato</option>
+                    <option value="restricao">Restrição</option>
+                    <option value="condicionado">Condicionado</option>
+                    <option value="recuperado">Recuperado</option>
+                    <option value="aprovado">Aprovado</option>
+                </select>
+                <button id="reportStatusBtn" class="btn btn-info" disabled>
+                    <i class="fas fa-print"></i> Imprimir por Status
+                </button>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Clientes</h2>
+                <div class="actions">
+                    <input type="text" id="search" class="form-control" placeholder="Pesquisar clientes..." style="width: 250px;">
+                </div>
+            </div>
+            
+            <div class="status-filter">
+                <button class="status-filter-btn active" data-status="all">Todos</button>
+                <button class="status-filter-btn" data-status="pendente">Pendente</button>
+                <button class="status-filter-btn" data-status="comprou">Comprou</button>
+                <button class="status-filter-btn" data-status="procurando">Procurando</button>
+                <button class="status-filter-btn" data-status="aprovado">Aprovado</button>
+                <button class="status-filter-btn" data-status="restricao">Restrição</button>
+                <button class="status-filter-btn" data-status="condicionado">Condicionado</button>
+                <button class="status-filter-btn" data-status="recuperado">Recuperado</button>
+                <button class="status-filter-btn" data-status="desistiu">Desistiu</button>
+            </div>
+            
+            <div class="table-responsive">
+                <table id="clientsTable">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Contato</th>
+                            <th>Status</th>
+                            <th>Valor Imóvel</th>
+                            <th>Tipo Imóvel</th>
+                            <th>Últ. Contato</th>
+                            <th>Próx. Contato</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="clientsList">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="clientModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="formTitle">Novo Cliente</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="clientForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="nome" class="form-label">Nome do Cliente*</label>
+                                <input type="text" id="nome" class="form-control" required placeholder="Nome completo do cliente">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="telefone" class="form-label">Telefone</label>
+                                <input type="text" id="telefone" class="form-control" placeholder="(00) 00000-0000" maxlength="15">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" id="email" class="form-control" placeholder="cliente@exemplo.com">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" class="form-control">
+                                    <option value="pendente">Pendente</option>
+                                    <option value="comprou">Comprou</option>
+                                    <option value="desistiu">Desistiu</option>
+                                    <option value="procurando">Procurando mais barato</option>
+                                    <option value="restricao">Restrição</option>
+                                    <option value="condicionado">Condicionado</option>
+                                    <option value="recuperado">Recuperado</option>
+                                    <option value="aprovado">Aprovado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="pretensao" class="form-label">Valor do Imóvel (R$)</label>
+                                <input type="text" id="pretensao" class="form-control money-input" placeholder="0,00">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="tipoImovel" class="form-label">Tipo de Imóvel</label>
+                                <input type="text" id="tipoImovel" class="form-control" placeholder="Ex: Apartamento 2 quartos, Casa, Terreno">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="observacoes" class="form-label">Observações</label>
+                        <textarea id="observacoes" rows="4" class="form-control" placeholder="Detalhes adicionais sobre o cliente ou o imóvel..."></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="dataContato" class="form-label">Data do Último Contato</label>
+                                <input type="date" id="dataContato" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="proximoContato" class="form-label">Próximo Contato Agendado</label>
+                                <input type="date" id="proximoContato" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" id="saveClient" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Cliente
+                        </button>
+                        <button type="button" id="cancelForm" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                    <input type="hidden" id="editId" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Configurações do Corretor</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="corretorForm">
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="corretorNome" class="form-label">Nome do Corretor*</label>
+                                <input type="text" id="corretorNome" class="form-control" required placeholder="Seu nome completo">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="corretorCreciInput" class="form-label">CRECI*</label>
+                                <input type="text" id="corretorCreciInput" class="form-control" required placeholder="Número do CRECI">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="corretorTelefone" class="form-label">Telefone*</label>
+                                <input type="text" id="corretorTelefone" class="form-control" required placeholder="(00) 00000-0000" maxlength="15">
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="form-group">
+                                <label for="corretorLogo" class="form-label">Logo/Marca</label>
+                                <input type="file" id="corretorLogoInput" class="form-control" accept="image/*">
+                                <small>Selecione uma imagem para sua logo/marca</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <img id="logoPreview" src="" class="logo-preview hidden" alt="Preview da Logo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Salvar Configurações
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Desenvolvedor - Alex Peixoto - 8299662-2036</p>
+        <p>PIX da Manutenção - CNPJ 31.632.000/0001-38, contribua com o que puder.</p>
+    </footer>
+
+    <script>
+        // Variáveis globais para armazenar os clientes e o filtro atual
+        let clients = JSON.parse(localStorage.getItem('prospectClients')) || [];
+        let currentFilter = 'all'; // Inicia mostrando todos os clientes por padrão
+        let corretorData = JSON.parse(localStorage.getItem('corretorData')) || {
+            nome: 'Seu Nome',
+            creci: '000000',
+            telefone: '',
+            logo: ''
+        };
+
+        // Referências aos elementos do DOM para evitar buscas repetidas
+        const clientModal = document.getElementById('clientModal');
+        const settingsModal = document.getElementById('settingsModal');
+        const newClientBtn = document.getElementById('newClientBtn');
+        const settingsBtn = document.getElementById('settingsBtn');
+        const cancelFormBtn = document.getElementById('cancelForm');
+        const clientForm = document.getElementById('clientForm');
+        const corretorForm = document.getElementById('corretorForm');
+        const searchInput = document.getElementById('search');
+        const clientsList = document.getElementById('clientsList');
+        const contactAlert = document.getElementById('contactAlert');
+        const alertMessage = document.getElementById('alertMessage');
+        const successAlert = document.getElementById('successAlert');
+        const successMessage = document.getElementById('successMessage');
+        const infoAlert = document.getElementById('infoAlert');
+        const infoMessage = document.getElementById('infoMessage');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const templateBtn = document.getElementById('templateBtn');
+        const excelTemplateBtn = document.getElementById('excelTemplateBtn');
+        const fileInput = document.getElementById('fileInput');
+        const statusFilterBtns = document.querySelectorAll('.status-filter-btn');
+        const corretorLogoInput = document.getElementById('corretorLogoInput');
+        const logoPreview = document.getElementById('logoPreview');
+        const modalCloseButtons = document.querySelectorAll('.modal-close');
+
+        // Elementos para relatórios
+        const reportAllClientsBtn = document.getElementById('reportAllClientsBtn');
+        const reportStatusSelect = document.getElementById('reportStatusSelect');
+        const reportStatusBtn = document.getElementById('reportStatusBtn');
+
+        // Instâncias de gráfico para gerenciar a atualização
+        let statusChartInstance = null;
+        let recuperadosAprovadosChartInstance = null;
+
+        /**
+         * Adiciona todos os Event Listeners necessários para a interatividade do sistema.
+         */
+        function addEventListeners() {
+            newClientBtn.addEventListener('click', showClientModal);
+            settingsBtn.addEventListener('click', showSettingsModal);
+            cancelFormBtn.addEventListener('click', hideClientModal);
+            clientForm.addEventListener('submit', saveClient);
+            corretorForm.addEventListener('submit', saveCorretorData);
+            searchInput.addEventListener('input', filterClients);
+            document.getElementById('telefone').addEventListener('input', formatPhone);
+            document.getElementById('corretorTelefone').addEventListener('input', formatPhone);
+            exportBtn.addEventListener('click', exportData);
+            importBtn.addEventListener('click', triggerFileInput);
+            templateBtn.addEventListener('click', downloadTemplate);
+            excelTemplateBtn.addEventListener('click', downloadExcelTemplate);
+            fileInput.addEventListener('change', importData);
+            corretorLogoInput.addEventListener('change', handleLogoUpload);
+            reportAllClientsBtn.addEventListener('click', printAllClients);
+            reportStatusSelect.addEventListener('change', toggleReportStatusBtn);
+            reportStatusBtn.addEventListener('click', printClientsByStatus);
+
+            // Adiciona listeners para os botões de filtro de status
+            statusFilterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const status = btn.getAttribute('data-status');
+                    filterByStatus(status);
+                    
+                    // Atualiza a classe ativa
+                    statusFilterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+
+            // Adiciona listeners para os botões de fechar modal
+            modalCloseButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    clientModal.style.display = 'none';
+                    settingsModal.style.display = 'none';
+                });
+            });
+
+            // Fechar modal ao clicar fora dele
+            window.addEventListener('click', (e) => {
+                if (e.target === clientModal) {
+                    hideClientModal();
+                }
+                if (e.target === settingsModal) {
+                    settingsModal.style.display = 'none';
+                }
+            });
+
+            // Fechar alertas ao clicar no botão de fechar
+            document.querySelectorAll('.close-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.target.parentElement.classList.add('hidden');
+                });
+            });
+        }
+
+        /**
+         * Inicializa o sistema, carregando dados e configurando a interface.
+         */
+        function initialize() {
+            addEventListeners();
+            displayClients();
+            updateCorretorInfo();
+            createCharts();
+            checkTodayContacts();
+        }
+
+        /**
+         * Atualiza as informações do corretor na interface.
+         */
+        function updateCorretorInfo() {
+            document.getElementById('corretorName').textContent = corretorData.nome;
+            document.getElementById('corretorCreci').textContent = `CRECI: ${corretorData.creci}`;
+            
+            if (corretorData.logo) {
+                document.getElementById('corretorLogo').src = corretorData.logo;
+            } else {
+                document.getElementById('corretorLogo').src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIiBmaWxsPSJub25lIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIyNSIgZmlsbD0iI0UwRTBFMCIvPjx0ZXh0IHg9IjI1IiB5PSIyOCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU=IjE0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjY2Ij5Mb2dvPC90ZXh0Pjwvc3ZnPg==';
+            }
+        }
+
+        /**
+         * Exibe o modal de formulário para adicionar/editar cliente.
+         */
+        function showClientModal() {
+            document.getElementById('formTitle').textContent = 'Novo Cliente';
+            document.getElementById('clientForm').reset();
+            document.getElementById('editId').value = '';
+            clientModal.style.display = 'block';
+        }
+
+        /**
+         * Exibe o modal de configurações do corretor.
+         */
+        function showSettingsModal() {
+            document.getElementById('corretorNome').value = corretorData.nome;
+            document.getElementById('corretorCreciInput').value = corretorData.creci;
+            document.getElementById('corretorTelefone').value = corretorData.telefone;
+            
+            if (corretorData.logo) {
+                logoPreview.src = corretorData.logo;
+                logoPreview.classList.remove('hidden');
+            } else {
+                logoPreview.classList.add('hidden');
+            }
+            
+            settingsModal.style.display = 'block';
+        }
+
+        /**
+         * Fecha o modal de formulário de cliente.
+         */
+        function hideClientModal() {
+            clientModal.style.display = 'none';
+        }
+
+        /**
+         * Formata um número de telefone enquanto o usuário digita.
+         */
+        function formatPhone(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 6) {
+                value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/(\d{2})(\d{0,5})/, '($1) $2');
+            } else if (value.length > 0) {
+                value = value.replace(/(\d{0,2})/, '($1');
+            }
+            
+            e.target.value = value;
+        }
+
+        /**
+         * Encontra um cliente duplicado com base no telefone ou e-mail.
+         * @param {object} newClient - O objeto do cliente a ser verificado.
+         * @param {string} [excludeId=null] - Um ID para excluir da busca (usado ao editar).
+         * @returns {object|null} - O cliente duplicado encontrado ou nulo.
+         */
+        function findDuplicateClient(newClient, excludeId = null) {
+            const newPhone = newClient.telefone ? newClient.telefone.replace(/\D/g, '') : '';
+            const newEmail = newClient.email ? newClient.email.toLowerCase().trim() : '';
+
+            if (!newPhone && !newEmail) {
+                return null; // Não verifica se não houver telefone ou e-mail
+            }
+
+            return clients.find(existingClient => {
+                if (existingClient.id === excludeId) {
+                    return false; // Não se compara a si mesmo durante a edição
+                }
+
+                const existingPhone = existingClient.telefone ? existingClient.telefone.replace(/\D/g, '') : '';
+                const existingEmail = existingClient.email ? existingClient.email.toLowerCase().trim() : '';
+                
+                let isDuplicate = false;
+                if (newPhone && existingPhone && newPhone === existingPhone) {
+                    isDuplicate = true;
+                }
+                if (newEmail && existingEmail && newEmail === existingEmail) {
+                    isDuplicate = true;
+                }
+                
+                return isDuplicate;
+            });
+        }
+
+
+        /**
+         * Salva ou atualiza um cliente, verificando duplicados.
+         */
+        function saveClient(e) {
+            e.preventDefault();
+            
+            const clientId = document.getElementById('editId').value;
+            const clientData = {
+                nome: document.getElementById('nome').value,
+                telefone: document.getElementById('telefone').value,
+                email: document.getElementById('email').value,
+                status: document.getElementById('status').value,
+                pretensao: document.getElementById('pretensao').value,
+                tipoImovel: document.getElementById('tipoImovel').value,
+                observacoes: document.getElementById('observacoes').value,
+                dataContato: document.getElementById('dataContato').value,
+                proximoContato: document.getElementById('proximoContato').value,
+                ultimoContatoWhatsapp: document.getElementById('dataContato').value || new Date().toISOString().split('T')[0]
+            };
+
+            const duplicate = findDuplicateClient(clientData, clientId);
+            if (duplicate) {
+                const proceed = confirm(`AVISO: Já existe um cliente cadastrado com este telefone ou e-mail (Nome: ${duplicate.nome}).\n\nDeseja continuar com o cadastro mesmo assim?`);
+                if (!proceed) {
+                    return; // Cancela o salvamento se o usuário clicar em "Não"
+                }
+            }
+            
+            if (clientId) {
+                // Atualiza cliente existente
+                const index = clients.findIndex(client => client.id === clientId);
+                if (index !== -1) {
+                    clients[index] = { ...clients[index], ...clientData };
+                    showAlert('Cliente atualizado com sucesso!', 'success');
+                }
+            } else {
+                // Adiciona novo cliente
+                clientData.id = Date.now().toString();
+                clientData.dataCadastro = new Date().toISOString().split('T')[0];
+                clients.push(clientData);
+                showAlert('Cliente adicionado com sucesso!', 'success');
+            }
+            
+            localStorage.setItem('prospectClients', JSON.stringify(clients));
+            displayClients();
+            updateCharts();
+            hideClientModal();
+        }
+
+        /**
+         * Salva as informações do corretor no armazenamento local.
+         */
+        function saveCorretorData(e) {
+            e.preventDefault();
+            
+            corretorData.nome = document.getElementById('corretorNome').value;
+            // **MELHORIA APLICADA AQUI**
+            // Limpa o input do CRECI para evitar duplicação do texto "CRECI"
+            corretorData.creci = document.getElementById('corretorCreciInput').value.replace(/CRECI:?\s*/i, '').trim();
+            corretorData.telefone = document.getElementById('corretorTelefone').value;
+            
+            localStorage.setItem('corretorData', JSON.stringify(corretorData));
+            updateCorretorInfo();
+            showAlert('Configurações salvas com sucesso!', 'success');
+            settingsModal.style.display = 'none';
+        }
+
+        /**
+         * Lida com o upload da logo do corretor.
+         */
+        function handleLogoUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    corretorData.logo = event.target.result;
+                    logoPreview.src = event.target.result;
+                    logoPreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        /**
+         * Exibe os clientes na tabela, aplicando filtros se necessário.
+         */
+        function displayClients() {
+            let filteredClients = clients;
+            
+            if (currentFilter !== 'all') {
+                filteredClients = clients.filter(client => client.status === currentFilter);
+            }
+            
+            const searchTerm = searchInput.value.toLowerCase();
+            if (searchTerm) {
+                filteredClients = filteredClients.filter(client => 
+                    client.nome.toLowerCase().includes(searchTerm) ||
+                    (client.telefone && client.telefone.toLowerCase().includes(searchTerm)) ||
+                    (client.email && client.email.toLowerCase().includes(searchTerm)) ||
+                    (client.tipoImovel && client.tipoImovel.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            filteredClients.sort((a, b) => {
+                if (!a.proximoContato) return 1;
+                if (!b.proximoContato) return -1;
+                return new Date(a.proximoContato) - new Date(b.proximoContato);
+            });
+            
+            clientsList.innerHTML = filteredClients.length > 0 
+                ? filteredClients.map(client => `
+                    <tr class="${isTodayContact(client.proximoContato) ? 'today-contact' : ''}">
+                        <td>${client.nome}</td>
+                        <td>
+                            ${client.telefone ? `${client.telefone}<br>` : ''}
+                            ${client.email || ''}
+                        </td>
+                        <td><span class="badge badge-${getStatusBadgeClass(client.status)}">${getStatusText(client.status)}</span></td>
+                        <td class="money">${formatCurrency(client.pretensao)}</td>
+                        <td>${client.tipoImovel || '-'}</td>
+                        <td>${formatDate(client.dataContato) || '-'}</td>
+                        <td>${formatDate(client.proximoContato) || '-'}</td>
+                        <td>
+                            <button class="action-btn btn-whatsapp" onclick="sendWhatsAppMessage('${client.telefone}', '${client.nome}', '${client.id}')" title="Enviar WhatsApp">
+                                <i class="fab fa-whatsapp"></i>
+                            </button>
+                            <button class="action-btn" onclick="editClient('${client.id}')" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn" onclick="deleteClient('${client.id}')" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `).join('')
+                : `<tr><td colspan="8" style="text-align: center;">Nenhum cliente encontrado</td></tr>`;
+        }
+
+        /**
+         * Envia mensagem pelo WhatsApp e atualiza a data do último contato.
+         */
+        function sendWhatsAppMessage(phone, name, clientId) {
+            if (!phone) {
+                showAlert('Número de telefone não informado para este cliente.', 'warning');
+                return;
+            }
+            
+            const cleanPhone = phone.replace(/\D/g, '');
+            const message = `Olá ${name}, tudo bem?`;
+            const encodedMessage = encodeURIComponent(message);
+            
+            window.open(`https://wa.me/55${cleanPhone}?text=${encodedMessage}`, '_blank');
+            
+            const today = new Date().toISOString().split('T')[0];
+            const clientIndex = clients.findIndex(client => client.id === clientId);
+            
+            if (clientIndex !== -1) {
+                clients[clientIndex].dataContato = today;
+                clients[clientIndex].ultimoContatoWhatsapp = today;
+                localStorage.setItem('prospectClients', JSON.stringify(clients));
+                displayClients();
+                showAlert(`Data de contato atualizada para hoje (${formatDate(today)}) para ${name}.`, 'info');
+            }
+        }
+
+        /**
+         * Prepara o formulário para edição de um cliente existente.
+         */
+        function editClient(id) {
+            const client = clients.find(c => c.id === id);
+            if (client) {
+                document.getElementById('formTitle').textContent = 'Editar Cliente';
+                document.getElementById('editId').value = client.id;
+                document.getElementById('nome').value = client.nome || '';
+                document.getElementById('telefone').value = client.telefone || '';
+                document.getElementById('email').value = client.email || '';
+                document.getElementById('status').value = client.status || 'pendente';
+                document.getElementById('pretensao').value = client.pretensao || '';
+                document.getElementById('tipoImovel').value = client.tipoImovel || '';
+                document.getElementById('observacoes').value = client.observacoes || '';
+                document.getElementById('dataContato').value = client.dataContato || '';
+                document.getElementById('proximoContato').value = client.proximoContato || '';
+                
+                clientModal.style.display = 'block';
+            }
+        }
+
+        /**
+         * Exclui um cliente após confirmação.
+         */
+        function deleteClient(id) {
+            if (confirm('Tem certeza que deseja excluir este cliente?')) {
+                clients = clients.filter(client => client.id !== id);
+                localStorage.setItem('prospectClients', JSON.stringify(clients));
+                displayClients();
+                updateCharts();
+                showAlert('Cliente excluído com sucesso!', 'success');
+            }
+        }
+
+        /**
+         * Filtra os clientes com base no texto de pesquisa.
+         */
+        function filterClients() {
+            displayClients();
+        }
+
+        /**
+         * Filtra os clientes por status.
+         */
+        function filterByStatus(status) {
+            currentFilter = status;
+            displayClients();
+        }
+
+        /**
+         * Cria os gráficos de análise de prospecção.
+         */
+        function createCharts() {
+            const statusCtx = document.getElementById('statusChart').getContext('2d');
+            const recuperadosAprovadosCtx = document.getElementById('recuperadosAprovadosChart').getContext('2d');
+            
+            const statusCounts = countClientsByStatus();
+            
+            statusChartInstance = new Chart(statusCtx, {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(statusCounts).map(key => getStatusText(key)),
+                    datasets: [{
+                        data: Object.values(statusCounts),
+                        backgroundColor: ['#FFC107', '#4CAF50', '#F44336', '#9C27B0', '#2196F3', '#FF9800', '#009688', '#03A9F4'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Distribuição por Status', font: { size: 16 } },
+                        legend: { position: 'right' }
+                    }
+                }
+            });
+            
+            const recuperadosCount = statusCounts.recuperado || 0;
+            const aprovadosCount = statusCounts.aprovado || 0;
+            
+            recuperadosAprovadosChartInstance = new Chart(recuperadosAprovadosCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Recuperados', 'Aprovados'],
+                    datasets: [{
+                        label: 'Quantidade',
+                        data: [recuperadosCount, aprovadosCount],
+                        backgroundColor: ['#009688', '#4CAF50'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Clientes Recuperados vs Aprovados', font: { size: 16 } }
+                    },
+                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+                }
+            });
+        }
+
+        /**
+         * Atualiza os gráficos com os dados mais recentes.
+         */
+        function updateCharts() {
+            if (!statusChartInstance || !recuperadosAprovadosChartInstance) return;
+            const statusCounts = countClientsByStatus();
+            
+            statusChartInstance.data.labels = Object.keys(statusCounts).map(key => getStatusText(key));
+            statusChartInstance.data.datasets[0].data = Object.values(statusCounts);
+            statusChartInstance.update();
+            
+            const recuperadosCount = statusCounts.recuperado || 0;
+            const aprovadosCount = statusCounts.aprovado || 0;
+            
+            recuperadosAprovadosChartInstance.data.datasets[0].data = [recuperadosCount, aprovadosCount];
+            recuperadosAprovadosChartInstance.update();
+        }
+
+        /**
+         * Conta clientes por status para os gráficos.
+         */
+        function countClientsByStatus() {
+            const statusCounts = {};
+            clients.forEach(client => {
+                statusCounts[client.status] = (statusCounts[client.status] || 0) + 1;
+            });
+            return statusCounts;
+        }
+
+        /**
+         * Verifica se há contatos agendados para hoje e exibe alerta.
+         */
+        function checkTodayContacts() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayContacts = clients.filter(client => client.proximoContato === today);
+            
+            if (todayContacts.length > 0) {
+                showAlert(`Você tem ${todayContacts.length} cliente(s) para entrar em contato hoje!`, 'warning');
+            }
+        }
+
+        /**
+         * Exporta os dados dos clientes para um arquivo JSON.
+         */
+        function exportData() {
+            const dataStr = JSON.stringify(clients, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'prospectos_clientes.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+            
+            showAlert('Dados exportados com sucesso!', 'success');
+        }
+
+        /**
+         * Aciona o input de arquivo para importação de dados.
+         */
+        function triggerFileInput() {
+            fileInput.click();
+        }
+
+        /**
+         * Processa a lista de clientes importados, verificando duplicados.
+         */
+        function processImportedClients(importedClients) {
+            if (!Array.isArray(importedClients) || importedClients.length === 0) {
+                showAlert('O arquivo não contém uma lista de clientes válida.', 'warning');
+                return;
+            }
+
+            let newClients = [];
+            let skippedCount = 0;
+            const existingIds = new Set(clients.map(c => c.id));
+
+            for (const client of importedClients) {
+                if (!client.id) {
+                    client.id = Date.now().toString() + Math.random().toString(36).substr(2, 5);
+                }
+
+                if (existingIds.has(client.id)) {
+                    skippedCount++;
+                    continue; // Pula clientes com o mesmo ID
+                }
+
+                const duplicate = findDuplicateClient(client);
+                if (duplicate) {
+                    const proceed = confirm(`AVISO: O cliente "${client.nome}" parece ser um duplicado de "${duplicate.nome}" (mesmo telefone/e-mail).\n\nDeseja importar mesmo assim?`);
+                    if (proceed) {
+                        newClients.push(client);
+                    } else {
+                        skippedCount++;
+                    }
+                } else {
+                    newClients.push(client);
+                }
+            }
+            
+            if (newClients.length > 0) {
+                clients = [...clients, ...newClients];
+                localStorage.setItem('prospectClients', JSON.stringify(clients));
+            }
+
+            displayClients();
+            updateCharts();
+
+            let message = `${newClients.length} cliente(s) importado(s) com sucesso.`;
+            if (skippedCount > 0) {
+                message += ` ${skippedCount} registro(s) foram ignorados por serem duplicados.`;
+            }
+            showAlert(message, 'success');
+        }
+
+
+        /**
+         * Importa dados de clientes a partir de um arquivo JSON ou Excel.
+         */
+        function importData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            
+            if (file.name.endsWith('.json')) {
+                reader.onload = (event) => {
+                    try {
+                        const importedClients = JSON.parse(event.target.result);
+                        processImportedClients(importedClients);
+                    } catch (error) {
+                        showAlert('Erro ao processar o arquivo JSON. Verifique o formato.', 'warning');
+                        console.error(error);
+                    }
+                };
+                reader.readAsText(file);
+            } 
+            else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+                reader.onload = (event) => {
+                    try {
+                        const data = new Uint8Array(event.target.result);
+                        const workbook = XLSX.read(data, { type: 'array' });
+                        const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+                        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                        
+                        const importedClients = jsonData.map(row => ({
+                            id: row.ID || null,
+                            nome: row.Nome || '',
+                            telefone: row.Telefone ? String(row.Telefone) : '',
+                            email: row.Email || '',
+                            status: (row.Status || 'pendente').toLowerCase(),
+                            pretensao: row.Pretensao || row['Valor Imóvel'] || '',
+                            tipoImovel: row['Tipo Imóvel'] || '',
+                            observacoes: row.Observacoes || '',
+                            dataContato: formatExcelDate(row['Data Contato']) || '',
+                            proximoContato: formatExcelDate(row['Próximo Contato']) || '',
+                            dataCadastro: formatExcelDate(row['Data Cadastro']) || new Date().toISOString().split('T')[0]
+                        }));
+
+                        processImportedClients(importedClients);
+
+                    } catch (error) {
+                        showAlert('Erro ao processar o arquivo Excel. Verifique o formato.', 'warning');
+                        console.error(error);
+                    }
+                };
+                reader.readAsArrayBuffer(file);
+            }
+            
+            e.target.value = ''; // Limpa o input
+        }
+
+
+        /**
+         * Baixa um modelo de arquivo JSON para importação.
+         */
+        function downloadTemplate() {
+            const template = [{
+                "id": "exemplo001", "nome": "João Silva", "telefone": "(11) 99999-9999", "email": "joao@exemplo.com",
+                "status": "pendente", "pretensao": "350000", "tipoImovel": "Apartamento 3 quartos",
+                "observacoes": "Cliente interessado em apartamento na região central", "dataContato": "2023-10-15",
+                "proximoContato": "2023-10-22", "dataCadastro": "2023-10-10"
+            }];
+            
+            const dataStr = JSON.stringify(template, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', 'modelo_clientes.json');
+            linkElement.click();
+        }
+
+        /**
+         * Baixa um modelo de planilha Excel para importação.
+         */
+        function downloadExcelTemplate() {
+            const template = [{
+                "ID": "exemplo001", "Nome": "João Silva", "Telefone": "(11) 99999-9999", "Email": "joao@exemplo.com",
+                "Status": "pendente", "Pretensao": "350000", "Tipo Imóvel": "Apartamento 3 quartos",
+                "Observacoes": "Cliente interessado em apartamento na região central", "Data Contato": "2023-10-15",
+                "Próximo Contato": "2023-10-22", "Data Cadastro": "2023-10-10"
+            }];
+            
+            const worksheet = XLSX.utils.json_to_sheet(template);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Clientes");
+            
+            XLSX.writeFile(workbook, "modelo_clientes.xlsx");
+        }
+
+        /**
+         * Habilita ou desabilita o botão de relatório por status com base na seleção.
+         */
+        function toggleReportStatusBtn() {
+            reportStatusBtn.disabled = !reportStatusSelect.value;
+        }
+
+        /**
+         * Imprime todos os clientes.
+         */
+        function printAllClients() {
+            generatePrintableContent(clients, "Todos os Clientes");
+        }
+
+        /**
+         * Imprime clientes filtrados por status.
+         */
+        function printClientsByStatus() {
+            const status = reportStatusSelect.value;
+            const filteredClients = clients.filter(client => client.status === status);
+            
+            if (filteredClients.length === 0) {
+                showAlert(`Nenhum cliente encontrado com status "${getStatusText(status)}".`, 'warning');
+                return;
+            }
+            
+            generatePrintableContent(filteredClients, `Clientes com Status: ${getStatusText(status)}`);
+        }
+
+        /**
+         * Gera o conteúdo para impressão.
+         */
+        function generatePrintableContent(clientsToPrint, title) {
+            const printContainer = document.createElement('div');
+            printContainer.className = 'printable-content';
+            
+            const currentDate = new Date().toLocaleDateString('pt-BR');
+            const corretorInfo = corretorData.nome ? ` - ${corretorData.nome} (CRECI: ${corretorData.creci})` : '';
+            
+            printContainer.innerHTML = `
+                <h1>Relatório de Clientes</h1>
+                <h2>${title}${corretorInfo}</h2>
+                <p>Emitido em: ${currentDate}</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Contato</th>
+                            <th>Status</th>
+                            <th>Valor Imóvel</th>
+                            <th>Tipo Imóvel</th>
+                            <th>Últ. Contato</th>
+                            <th>Próx. Contato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${clientsToPrint.map(client => `
+                            <tr>
+                                <td>${client.nome}</td>
+                                <td>
+                                    ${client.telefone ? `${client.telefone}<br>` : ''}
+                                    ${client.email || ''}
+                                </td>
+                                <td><span class="badge badge-${getStatusBadgeClass(client.status)}">${getStatusText(client.status)}</span></td>
+                                <td class="money">${formatCurrency(client.pretensao)}</td>
+                                <td>${client.tipoImovel || '-'}</td>
+                                <td>${formatDate(client.dataContato) || '-'}</td>
+                                <td>${formatDate(client.proximoContato) || '-'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.body.appendChild(printContainer);
+            
+            window.onafterprint = function() {
+                printContainer.remove();
+                window.onafterprint = null;
+            };
+
+            window.print();
+        }
+
+        /**
+         * Exibe um alerta na interface.
+         */
+        function showAlert(message, type) {
+            const alert = type === 'success' ? successAlert : 
+                         type === 'info' ? infoAlert : contactAlert;
+            
+            const messageElement = type === 'success' ? successMessage : 
+                                 type === 'info' ? infoMessage : alertMessage;
+            
+            messageElement.textContent = message;
+            alert.classList.remove('hidden');
+            
+            setTimeout(() => {
+                alert.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Funções utilitárias
+        function formatCurrency(value) {
+            if (!value) return 'R$ 0,00';
+            const number = typeof value === 'string' ? parseFloat(value.replace(/[^\d,]/g, '').replace(',', '.')) : value;
+            return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(number);
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const userTimezoneOffset = date.getTimezoneOffset() * 60000;
+            return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString('pt-BR');
+        }
+
+        function isTodayContact(dateString) {
+            if (!dateString) return false;
+            const today = new Date().toISOString().split('T')[0];
+            return dateString === today;
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pendente': 'Pendente', 'comprou': 'Comprou', 'desistiu': 'Desistiu',
+                'procurando': 'Procurando', 'restricao': 'Restrição', 'condicionado': 'Condicionado',
+                'recuperado': 'Recuperado', 'aprovado': 'Aprovado'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getStatusBadgeClass(status) {
+            const statusClassMap = {
+                'pendente': 'warning', 'comprou': 'success', 'desistiu': 'danger',
+                'procurando': 'info', 'restricao': 'purple', 'condicionado': 'warning',
+                'recuperado': 'teal', 'aprovado': 'success'
+            };
+            return statusClassMap[status] || 'primary';
+        }
+
+        function formatExcelDate(excelDate) {
+            if (!excelDate) return '';
+            
+            if (typeof excelDate === 'number') {
+                const date = new Date((excelDate - 25569) * 86400 * 1000);
+                return date.toISOString().split('T')[0];
+            }
+            
+            if (typeof excelDate === 'string') {
+                const parts = excelDate.split('/');
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
+                }
+                
+                const isoDate = new Date(excelDate);
+                if (!isNaN(isoDate.getTime())) {
+                    return isoDate.toISOString().split('T')[0];
+                }
+            }
+            
+            return excelDate;
+        }
+
+        // Inicializa o sistema quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', initialize);
+    </script>
+</body>
+</html>
