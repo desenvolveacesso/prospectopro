@@ -668,10 +668,10 @@
                     <i class="fas fa-file-excel"></i> Baixar Modelo Excel
                 </button>
                 <button id="exportBtn" class="btn btn-outline">
-                    <i class="fas fa-file-export"></i> Exportar Dados
+                    <i class="fas fa-file-export"></i> Exportar Backup
                 </button>
                 <button id="importBtn" class="btn btn-outline">
-                    <i class="fas fa-file-import"></i> Importar Dados
+                    <i class="fas fa-file-import"></i> Importar Backup
                 </button>
                 <input type="file" id="fileInput" class="file-input" accept=".json,.xlsx,.xls">
                 <button id="newClientBtn" class="btn btn-primary">
@@ -1206,8 +1206,6 @@
             e.preventDefault();
             
             corretorData.nome = document.getElementById('corretorNome').value;
-            // **MELHORIA APLICADA AQUI**
-            // Limpa o input do CRECI para evitar duplicação do texto "CRECI"
             corretorData.creci = document.getElementById('corretorCreciInput').value.replace(/CRECI:?\s*/i, '').trim();
             corretorData.telefone = document.getElementById('corretorTelefone').value;
             
@@ -1460,20 +1458,30 @@
             }
         }
 
+        // =================================================================
+        // =========== SEÇÃO DE IMPORTAÇÃO E EXPORTAÇÃO CORRIGIDA ==========
+        // =================================================================
+
         /**
-         * Exporta os dados dos clientes para um arquivo JSON.
+         * Exporta um backup completo do sistema (clientes e configurações) para um arquivo JSON.
          */
         function exportData() {
-            const dataStr = JSON.stringify(clients, null, 2);
+            const backupData = {
+                version: '1.1', // Adiciona uma versão para futuras migrações
+                corretorData: corretorData,
+                clients: clients
+            };
+
+            const dataStr = JSON.stringify(backupData, null, 2);
             const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            const exportFileDefaultName = 'prospectos_clientes.json';
+            const exportFileDefaultName = 'prospecto_pro_backup.json';
             
             const linkElement = document.createElement('a');
             linkElement.setAttribute('href', dataUri);
             linkElement.setAttribute('download', exportFileDefaultName);
             linkElement.click();
             
-            showAlert('Dados exportados com sucesso!', 'success');
+            showAlert('Backup completo exportado com sucesso!', 'success');
         }
 
         /**
@@ -1482,21 +1490,28 @@
         function triggerFileInput() {
             fileInput.click();
         }
-
+        
         /**
-         * Processa a lista de clientes importados, verificando duplicados.
+         * Processa a lista de clientes importados, verificando duplicados e validando formato.
          */
         function processImportedClients(importedClients) {
-            if (!Array.isArray(importedClients) || importedClients.length === 0) {
+            if (!Array.isArray(importedClients)) {
                 showAlert('O arquivo não contém uma lista de clientes válida.', 'warning');
-                return;
+                return { successCount: 0, skippedCount: 0 };
             }
 
             let newClients = [];
             let skippedCount = 0;
+            let invalidFormatCount = 0;
             const existingIds = new Set(clients.map(c => c.id));
 
             for (const client of importedClients) {
+                // Validação básica para garantir que é um objeto de cliente válido
+                if (!client || typeof client.nome !== 'string' || !client.nome) {
+                    invalidFormatCount++;
+                    continue;
+                }
+                
                 if (!client.id) {
                     client.id = Date.now().toString() + Math.random().toString(36).substr(2, 5);
                 }
@@ -1521,17 +1536,19 @@
             
             if (newClients.length > 0) {
                 clients = [...clients, ...newClients];
-                localStorage.setItem('prospectClients', JSON.stringify(clients));
             }
-
-            displayClients();
-            updateCharts();
-
+            
             let message = `${newClients.length} cliente(s) importado(s) com sucesso.`;
             if (skippedCount > 0) {
                 message += ` ${skippedCount} registro(s) foram ignorados por serem duplicados.`;
             }
+            if (invalidFormatCount > 0) {
+                message += ` ${invalidFormatCount} registro(s) foram ignorados por formato inválido.`;
+            }
+            
             showAlert(message, 'success');
+            
+            return { successCount: newClients.length, skippedCount: skippedCount + invalidFormatCount };
         }
 
 
@@ -1543,12 +1560,35 @@
             if (!file) return;
             
             const reader = new FileReader();
-            
-            if (file.name.endsWith('.json')) {
+            const fileName = file.name.toLowerCase();
+
+            if (fileName.endsWith('.json')) {
                 reader.onload = (event) => {
                     try {
-                        const importedClients = JSON.parse(event.target.result);
-                        processImportedClients(importedClients);
+                        const importedData = JSON.parse(event.target.result);
+                        
+                        // Verifica se é o formato de backup novo ou antigo
+                        if (importedData.clients && Array.isArray(importedData.clients)) {
+                            // Formato novo (backup completo)
+                            processImportedClients(importedData.clients);
+                            
+                            if (importedData.corretorData) {
+                                corretorData = { ...corretorData, ...importedData.corretorData };
+                                localStorage.setItem('corretorData', JSON.stringify(corretorData));
+                                updateCorretorInfo();
+                                showAlert('Configurações do corretor também foram restauradas.', 'info');
+                            }
+                        } else if (Array.isArray(importedData)) {
+                            // Formato antigo (apenas lista de clientes)
+                            processImportedClients(importedData);
+                        } else {
+                            throw new Error("Formato JSON inválido.");
+                        }
+
+                        localStorage.setItem('prospectClients', JSON.stringify(clients));
+                        displayClients();
+                        updateCharts();
+
                     } catch (error) {
                         showAlert('Erro ao processar o arquivo JSON. Verifique o formato.', 'warning');
                         console.error(error);
@@ -1556,7 +1596,7 @@
                 };
                 reader.readAsText(file);
             } 
-            else if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+            else if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls')) {
                 reader.onload = (event) => {
                     try {
                         const data = new Uint8Array(event.target.result);
@@ -1579,8 +1619,13 @@
                         }));
 
                         processImportedClients(importedClients);
+                        
+                        localStorage.setItem('prospectClients', JSON.stringify(clients));
+                        displayClients();
+                        updateCharts();
 
-                    } catch (error) {
+                    } catch (error)
+                    {
                         showAlert('Erro ao processar o arquivo Excel. Verifique o formato.', 'warning');
                         console.error(error);
                     }
@@ -1590,6 +1635,10 @@
             
             e.target.value = ''; // Limpa o input
         }
+
+        // =================================================================
+        // ==================== FIM DA SEÇÃO CORRIGIDA =====================
+        // =================================================================
 
 
         /**
