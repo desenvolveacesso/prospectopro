@@ -86,7 +86,7 @@
         .btn-finance:hover { background-color: var(--finance-dark); transform: translateY(-2px); }
         
         /* Padroniza tamanho dos botões no cabeçalho principal */
-        #mainPage header .actions .btn {
+        header .actions .btn {
             min-width: 170px;
         }
 
@@ -228,14 +228,14 @@
         .chart-wrapper { position: relative; height: 300px; width: 100%; }
         
         @media (max-width: 992px) {
-            #mainPage header .actions .btn { min-width: 150px; }
+            header .actions .btn { min-width: 150px; }
         }
 
         @media (max-width: 768px) {
             .form-row { flex-direction: column; gap: 0; }
             .header-content { flex-direction: column; gap: 20px; align-items: flex-start; }
-            #mainPage header .actions { width: 100%; justify-content: center; }
-            #mainPage header .actions .btn { flex-grow: 1; }
+            header .actions { width: 100%; justify-content: center; }
+            header .actions .btn { flex-grow: 1; }
             .charts-container { grid-template-columns: 1fr; }
             .card-header { justify-content: center; text-align: center; }
             .card-header .actions { width: 100%; }
@@ -243,6 +243,8 @@
     </style>
 </head>
 <body>
+    <input type="file" id="fileInput" class="file-input" accept=".json, .xlsx, .xls">
+
     <div id="mainPage">
         <header>
             <div class="container header-content">
@@ -254,14 +256,13 @@
                     </div>
                 </div>
                 <div class="actions">
-                    <button id="financeBtn" class="btn btn-finance"><i class="fas fa-chart-line"></i> Painel Financeiro</button>
-                    <button id="clientsBtn" class="btn btn-info"><i class="fas fa-users"></i> Painel de Clientes</button>
-                    <button id="exportBtn" class="btn btn-success"><i class="fas fa-file-export"></i> Exportar Backup</button>
-                    <button id="importBtn" class="btn btn-success"><i class="fas fa-file-import"></i> Importar Dados</button>
-                    <button id="downloadExcelTemplateBtn" class="btn btn-info"><i class="fas fa-file-excel"></i> Baixar Modelo</button>
-                    <button id="settingsBtn" class="btn btn-warning"><i class="fas fa-cog"></i> Configurações</button>
+                    <button class="btn btn-finance show-finance-page"><i class="fas fa-chart-line"></i> Painel Financeiro</button>
+                    <button class="btn btn-info show-clients-page"><i class="fas fa-users"></i> Painel de Clientes</button>
+                    <button class="btn btn-success export-data"><i class="fas fa-file-export"></i> Exportar Backup</button>
+                    <button class="btn btn-success import-data-trigger"><i class="fas fa-file-import"></i> Importar Dados</button>
+                    <button class="btn btn-info download-template"><i class="fas fa-file-excel"></i> Baixar Modelo</button>
+                    <button class="btn btn-warning show-settings"><i class="fas fa-cog"></i> Configurações</button>
                     <a href="https://dinheiroeplanejamento.blogspot.com/" target="_blank" class="btn btn-outline" title="Visitar Blog"><i class="fas fa-blog"></i> Blog</a>
-                    <input type="file" id="fileInput" class="file-input" accept=".json, .xlsx, .xls">
                 </div>
             </div>
         </header>
@@ -303,7 +304,14 @@
                     </div>
                 </div>
                 <div class="actions">
-                    <button id="backToMainFromClientsBtn" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Voltar ao Início</button>
+                    <button class="btn btn-outline show-main-page"><i class="fas fa-arrow-left"></i> Voltar ao Início</button>
+                    <button id="newClientBtn" class="btn btn-primary"><i class="fas fa-user-plus"></i> Novo Cliente</button>
+                    <button class="btn btn-finance show-finance-page"><i class="fas fa-chart-line"></i> Painel Financeiro</button>
+                    <button class="btn btn-success export-data"><i class="fas fa-file-export"></i> Exportar Backup</button>
+                    <button class="btn btn-success import-data-trigger"><i class="fas fa-file-import"></i> Importar Dados</button>
+                    <button class="btn btn-info download-template"><i class="fas fa-file-excel"></i> Baixar Modelo</button>
+                    <button class="btn btn-warning show-settings"><i class="fas fa-cog"></i> Configurações</button>
+                    <a href="https://dinheiroeplanejamento.blogspot.com/" target="_blank" class="btn btn-outline" title="Visitar Blog"><i class="fas fa-blog"></i> Blog</a>
                 </div>
             </div>
         </header>
@@ -326,7 +334,6 @@
                     <h2 class="card-title"><i class="fas fa-users"></i> Clientes</h2>
                     <div class="actions" style="flex-grow: 1; justify-content: flex-end;">
                         <input type="text" id="search" class="form-control" placeholder="Pesquisar..." style="width: 250px; min-width: 150px;">
-                        <button id="newClientBtn" class="btn btn-primary"><i class="fas fa-user-plus"></i> Novo Cliente</button>
                     </div>
                 </div>
                 
@@ -364,8 +371,14 @@
                     </div>
                 </div>
                 <div class="actions">
-                    <button id="backToMainBtn" class="btn btn-outline"><i class="fas fa-arrow-left"></i> Voltar ao Início</button>
+                    <button class="btn btn-outline show-main-page"><i class="fas fa-arrow-left"></i> Voltar ao Início</button>
+                    <button class="btn btn-info show-clients-page"><i class="fas fa-users"></i> Painel de Clientes</button>
                     <button id="printFinanceBtn" class="btn btn-outline"><i class="fas fa-print"></i> Imprimir Relatório</button>
+                    <button class="btn btn-success export-data"><i class="fas fa-file-export"></i> Exportar Backup</button>
+                    <button class="btn btn-success import-data-trigger"><i class="fas fa-file-import"></i> Importar Dados</button>
+                    <button class="btn btn-info download-template"><i class="fas fa-file-excel"></i> Baixar Modelo</button>
+                    <button class="btn btn-warning show-settings"><i class="fas fa-cog"></i> Configurações</button>
+                    <a href="https://dinheiroeplanejamento.blogspot.com/" target="_blank" class="btn btn-outline" title="Visitar Blog"><i class="fas fa-blog"></i> Blog</a>
                 </div>
             </div>
         </header>
@@ -563,20 +576,10 @@
         }
 
         function addEventListeners() {
+            // Botões com IDs únicos
             document.getElementById('newClientBtn').addEventListener('click', () => showClientForm());
-            document.getElementById('settingsBtn').addEventListener('click', () => showSettings());
-            document.getElementById('downloadExcelTemplateBtn').addEventListener('click', downloadExcelTemplate);
-            document.getElementById('exportBtn').addEventListener('click', exportData);
-            document.getElementById('importBtn').addEventListener('click', () => document.getElementById('fileInput').click());
             document.getElementById('fileInput').addEventListener('change', importData);
-            document.getElementById('financeBtn').addEventListener('click', showFinancePage);
-            document.getElementById('clientsBtn').addEventListener('click', showClientsPage);
-            
-            document.getElementById('backToMainBtn').addEventListener('click', showMainPage);
-            document.getElementById('backToMainFromClientsBtn').addEventListener('click', showMainPage);
-
             document.getElementById('printFinanceBtn').addEventListener('click', printFinanceReport);
-            
             document.getElementById('reportAllClientsBtn').addEventListener('click', () => printReport('all'));
             document.getElementById('reportFunnelBtn').addEventListener('click', () => {
                 const etapa = document.getElementById('reportFunnelSelect').value;
@@ -585,11 +588,19 @@
             document.getElementById('reportFunnelSelect').addEventListener('change', function() {
                 document.getElementById('reportFunnelBtn').disabled = !this.value;
             });
-            
             document.getElementById('clientForm').addEventListener('submit', saveClient);
             document.getElementById('corretorForm').addEventListener('submit', saveCorretorData);
             document.getElementById('cancelForm').addEventListener('click', () => closeModal(clientModal));
             document.getElementById('clearSystemBtn').addEventListener('click', clearSystem);
+
+            // Botões de navegação e ação (usando classes)
+            document.querySelectorAll('.show-main-page').forEach(btn => btn.addEventListener('click', showMainPage));
+            document.querySelectorAll('.show-finance-page').forEach(btn => btn.addEventListener('click', showFinancePage));
+            document.querySelectorAll('.show-clients-page').forEach(btn => btn.addEventListener('click', showClientsPage));
+            document.querySelectorAll('.export-data').forEach(btn => btn.addEventListener('click', exportData));
+            document.querySelectorAll('.import-data-trigger').forEach(btn => btn.addEventListener('click', () => document.getElementById('fileInput').click()));
+            document.querySelectorAll('.download-template').forEach(btn => btn.addEventListener('click', downloadExcelTemplate));
+            document.querySelectorAll('.show-settings').forEach(btn => btn.addEventListener('click', showSettings));
             
             document.querySelectorAll('.modal-close').forEach(btn => {
                 btn.addEventListener('click', () => {
@@ -931,10 +942,37 @@
             e.preventDefault();
             
             const clientId = document.getElementById('editId').value;
+            const nome = document.getElementById('nome').value;
+            const telefone = document.getElementById('telefone').value;
+            const email = document.getElementById('email').value.trim().toLowerCase();
+
+            // Validação de duplicidade
+            const normalizedPhone = telefone.replace(/\D/g, '');
+            const isDuplicate = clients.find(client => {
+                const existingNormalizedPhone = client.telefone.replace(/\D/g, '');
+                const existingEmail = client.email ? client.email.trim().toLowerCase() : '';
+                
+                // Ignora o próprio cliente na verificação durante a edição
+                if (client.id === clientId) {
+                    return false;
+                }
+                
+                // Verifica se o telefone ou o e-mail (se não for vazio) já existe
+                if (existingNormalizedPhone === normalizedPhone) return true;
+                if (email && existingEmail && existingEmail === email) return true;
+                
+                return false;
+            });
+
+            if (isDuplicate) {
+                showAlert('warning', 'Já existe um cliente cadastrado com este telefone ou e-mail.');
+                return;
+            }
+
             const clientData = {
                 id: clientId || Date.now().toString(),
-                nome: document.getElementById('nome').value,
-                telefone: document.getElementById('telefone').value,
+                nome: nome,
+                telefone: telefone,
                 email: document.getElementById('email').value,
                 etapaFunil: document.getElementById('etapaFunil').value,
                 pretensao: document.getElementById('pretensao').value,
